@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Threading;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace Remote
 {
@@ -12,14 +12,14 @@ namespace Remote
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs args)
         {
             Exception e = args.Exception;
-            MessageBox.Show(e.Message, "Unhandled exception");
-            args.Handled = true;
-
             var mainWindow = (MainWindow)MainWindow;
+
             if (mainWindow != null && mainWindow.Model != null)
             {
-                mainWindow.Model.Refresh();
+                mainWindow.ShowMessageAsync("Unhandled Error", e.Message)
+                    .ContinueWith(task => mainWindow.Model.Refresh());
             }
+            args.Handled = true;
         }
     }
 }

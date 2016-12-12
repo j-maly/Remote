@@ -31,8 +31,7 @@ namespace Remote
             OnGlobalLogFileChanged();
         }
 
-        [StringFormatMethod("format")]
-        public void AppendGlobalLineFormat(string format, params object[] args)
+        public void AppendGlobalLine(string message)
         {
             if (fileLock == null)
             {
@@ -46,7 +45,7 @@ namespace Remote
                     using (var writer = File.AppendText(config.SharedLogFile))
                     {
                         writer.Write("{0:dd/MM/yyyy HH:mm:ss} : {1} : {2} : ", DateTime.Now, Environment.MachineName, Environment.UserName);
-                        writer.WriteLine(format, args);
+                        writer.WriteLine(message);
                     }
                 }
                 finally

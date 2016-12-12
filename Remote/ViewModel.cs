@@ -44,6 +44,7 @@ namespace Remote
         private MachineElement machine;
         private int timerRefreshInterval = 60;
         private ServiceInfo selectedService;
+        private string customMessage;
 
         #endregion
 
@@ -98,10 +99,30 @@ namespace Remote
             private set
             {
                 if (Equals(value, selectedService)) return;
+                if (selectedService != null)
+                {
+                    selectedService.PropertyChanged -= SelectedService_PropertyChanged;
+                }
                 selectedService = value;
+                if (selectedService != null)
+                {
+                    selectedService.PropertyChanged += SelectedService_PropertyChanged;
+                }
                 OnPropertyChanged();
                 LogDisplay.Refresh();
                 OnPropertyChanged(nameof(LogDisplay));
+            }
+        }
+
+        private void SelectedService_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SelectedService.IsRunning))
+            {
+                StartStopService();
+            }
+            if (e.PropertyName == nameof(SelectedService.StartupType))
+            {
+                ChangeStartupType();
             }
         }
 
@@ -181,6 +202,17 @@ namespace Remote
             }
         }
 
+        public string CustomMessage
+        {
+            get { return customMessage; }
+            set
+            {
+                if (value == customMessage) return;
+                customMessage = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion 
 
         #region service operation 
@@ -194,7 +226,7 @@ namespace Remote
             using (RunInBackground())
             {
                 await ServiceExplorer.StartService(SelectedService);
-                Logging.AppendGlobalLineFormat("Service started: {0}", SelectedService.Describe());
+                Logging.AppendGlobalLine($"Service started: {SelectedService.Describe()} {CustomMessage}");
                 await Refresh();
             }
         }
@@ -204,7 +236,7 @@ namespace Remote
             using (RunInBackground())
             {
                 await ServiceExplorer.StopService(SelectedService);
-                Logging.AppendGlobalLineFormat("Service stopped: {0}", SelectedService.Describe());
+                Logging.AppendGlobalLine($"Service stopped: {SelectedService.Describe()} {CustomMessage}");
                 await Refresh();
             }
         }
@@ -229,7 +261,7 @@ namespace Remote
             using (RunInBackground())
             {
                 await ServiceExplorer.ChangeStartupType(SelectedService, SelectedService.StartupType);
-                Logging.AppendGlobalLineFormat("Set {0} startup type to {1}", SelectedService.Describe(), SelectedService.StartupType);
+                Logging.AppendGlobalLine($"Set {SelectedService.Describe()} startup type to {SelectedService.StartupType} {CustomMessage}");
                 await Refresh();
             }
         }
@@ -251,7 +283,7 @@ namespace Remote
                     }
                     else
                     {
-                        throw new FileNotFoundException($"No log file found in folder '{Machine.LogFolder}' for service '{SelectedService.Describe()}'.");
+                        throw new FileNotFoundException($"No log file found in folder '{Machine.LogFolder}' {Environment.NewLine}for service '{SelectedService.Describe()}'.");
                     }
                 });
             }
@@ -265,8 +297,8 @@ namespace Remote
             }
             using (RunInBackground())
             {
-                List<ServiceInfo> displayedServices = await ServiceExplorer.GetServices(Machine.MachineName);
-                DisplayedServicesView = CollectionViewSource.GetDefaultView(displayedServices);
+                List<ServiceInfo> services = await ServiceExplorer.GetServices(Machine.MachineName);
+                DisplayedServicesView = CollectionViewSource.GetDefaultView(services);
                 DisplayedServicesView.Filter = o => FilterByNamePattern((ServiceInfo)o);
                 LoggingOnGlobalLogFileChanged(null, null);
             }

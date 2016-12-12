@@ -6,7 +6,6 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Remote"
         xmlns:utils="clr-namespace:Remote.Utils"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="Remote" Height="500" Width="650" ShowIconOnTitleBar="True" BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
@@ -54,7 +53,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="250"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -63,8 +63,8 @@
             <RowDefinition Height="3" />
             <RowDefinition Height="100" />
         </Grid.RowDefinitions>
-        
-        <TabControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
+
+        <TabControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" 
                     ItemsSource="{Binding Path=Config.Machines}"
                     SelectedItem="{Binding Machine, Mode=TwoWay}">
             <TabControl.ItemTemplate>
@@ -80,7 +80,10 @@
         <Label Grid.Row="1" Grid.Column="0" Content="Name pattern:" VerticalAlignment="Bottom" Margin="4,0,0,5" />
         <TextBox Grid.Row="1" Grid.Column="1"
                  Text="{Binding NamePattern, UpdateSourceTrigger=PropertyChanged, Delay=300}" Margin="0,5,0,5"/>
-        <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" 
+        <Label Grid.Row="1" Grid.Column="2" Content="Custom message:" VerticalAlignment="Bottom" Margin="4,0,0,5" />
+        <TextBox Grid.Row="1" Grid.Column="3"
+                 Text="{Binding CustomMessage}" Margin="0,5,0,5"/>
+        <DataGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" 
                   ItemsSource="{Binding DisplayedServicesView}"
                   SelectedItem="{Binding SelectedService}"
                   x:Name="ServicesGrid" EnableRowVirtualization="True"
@@ -105,11 +108,6 @@
                                 <ComboBoxItem>Automatic</ComboBoxItem>
                                 <ComboBoxItem>Manual</ComboBoxItem>
                                 <ComboBoxItem>Disabled</ComboBoxItem>
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <i:InvokeCommandAction Command="{Binding Path=DataContext.ChangeStartupTypeCommand, ElementName=Root}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -124,9 +122,7 @@
                 <DataGridTemplateColumn SortMemberPath="Status" Width="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="local:ServiceInfo">
-                            <Controls:ToggleSwitchButton 
-                                Command="{Binding Path=DataContext.StartStopServiceCommand, ElementName=Root}"
-                                IsChecked="{Binding IsRunning, Mode=OneWay}"                                                   
+                            <Controls:ToggleSwitchButton IsChecked="{Binding IsRunning, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 VerticalAlignment="Bottom" Margin="0,0,5,0" Height="25" Width="50">
                             </Controls:ToggleSwitchButton>
                         </DataTemplate>
@@ -142,9 +138,9 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <GridSplitter Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Height="3" 
+        <GridSplitter Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Height="3" 
                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ResizeDirection="Rows" />
-        <TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" 
+        <TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" 
                  BorderThickness="1" BorderBrush="{StaticResource NonActiveBorderColorBrush}"
                  Text="{Binding LogDisplay, Mode=OneWay, Converter={StaticResource LinesToText}}" IsReadOnly="true"
                  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"
