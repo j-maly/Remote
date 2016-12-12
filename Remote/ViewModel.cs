@@ -42,7 +42,7 @@ namespace Remote
         private Regex namePatternRegex;
         private ICollectionView logDisplay;
         private MachineElement machine;
-        private int timerRefreshInterval = 30;
+        private int timerRefreshInterval = 60;
         private ServiceInfo selectedService;
 
         #endregion
@@ -291,7 +291,6 @@ namespace Remote
         #region notify property changed 
 
         public event PropertyChangedEventHandler PropertyChanged;
-
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

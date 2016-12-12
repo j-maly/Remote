@@ -8,11 +8,24 @@
         xmlns:utils="clr-namespace:Remote.Utils"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Title="Remote" Height="500" Width="650" ShowIconOnTitleBar="True" 
-        BorderBrush="{DynamicResource AccentColorBrush}"
+        Title="Remote" Height="500" Width="650" ShowIconOnTitleBar="True" BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
         x:Name="Root"
         d:DataContext="{d:DesignInstance Type=local:ViewModel, IsDesignTimeCreatable=True}">
+    <!--<Controls:MetroWindow.Icon>
+        <DrawingImage>
+            <DrawingImage.Drawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="10,10,20,20" />
+                    </GeometryDrawing.Geometry>
+                    <GeometryDrawing.Brush>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_tv_remote}" />
+                    </GeometryDrawing.Brush>
+                </GeometryDrawing>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+    </Controls:MetroWindow.Icon>-->
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -50,6 +63,7 @@
             <RowDefinition Height="3" />
             <RowDefinition Height="100" />
         </Grid.RowDefinitions>
+        
         <TabControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
                     ItemsSource="{Binding Path=Config.Machines}"
                     SelectedItem="{Binding Machine, Mode=TwoWay}">
@@ -82,19 +96,12 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--<DataGridTemplateColumn Header="Startup Type" SortMemberPath="StartupType">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="local:ServiceInfo">
-                            <TextBlock Text="{Binding StartupType}" VerticalAlignment="Top" Margin="20,0" />
-                            --><!--ContextMenu="{StaticResource StartupTypeMenu}"--><!--
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
                 <DataGridTemplateColumn Header="Startup Type" SortMemberPath="StartupType" IsReadOnly="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="local:ServiceInfo">
                             <ComboBox SelectedValue="{Binding Path=StartupType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      SelectedValuePath="Content">
+                                      SelectedValuePath="Content"
+                                      Margin="5,0">
                                 <ComboBoxItem>Automatic</ComboBoxItem>
                                 <ComboBoxItem>Manual</ComboBoxItem>
                                 <ComboBoxItem>Disabled</ComboBoxItem>
@@ -107,7 +114,13 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" IsReadOnly="True" />
+                <DataGridTemplateColumn Header="Status" SortMemberPath="Status" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="local:ServiceInfo">
+                            <TextBlock Text="{Binding Status}" VerticalAlignment="Center" Margin="5,0" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn SortMemberPath="Status" Width="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="local:ServiceInfo">

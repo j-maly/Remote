@@ -92,7 +92,6 @@
     <Compile Include="Logging.cs" />
     <Compile Include="Utils\InverseBooleanConverter.cs" />
     <Compile Include="Utils\LinesToTextConverter.cs" />
-    <Compile Include="Utils\TypeSafeDelegateCommand.cs" />
     <Compile Include="ServiceExplorer.cs" />
     <Compile Include="ServiceInfo.cs" />
     <Compile Include="Utils\IOUtils.cs" />
