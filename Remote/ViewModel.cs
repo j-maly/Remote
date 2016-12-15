@@ -109,7 +109,7 @@ namespace Remote
                     selectedService.PropertyChanged += SelectedService_PropertyChanged;
                 }
                 OnPropertyChanged();
-                LogDisplay.Refresh();
+                LogDisplay?.Refresh();
                 OnPropertyChanged(nameof(LogDisplay));
             }
         }
@@ -311,9 +311,12 @@ namespace Remote
         private void LoggingOnGlobalLogFileChanged(object sender, EventArgs e)
         {
             var logLines = Logging.GetLogTail(NumberOfLogLinesShown);
-            LogDisplay = CollectionViewSource.GetDefaultView(logLines);
-            LogDisplay.Filter = l => FilterBySelectedService((string)l);
-            LogDisplay.Refresh();
+            if (logLines != null)
+            {
+                LogDisplay = CollectionViewSource.GetDefaultView(logLines);
+                LogDisplay.Filter = l => FilterBySelectedService((string) l);
+                LogDisplay.Refresh();
+            }
             OnPropertyChanged(nameof(LogDisplay));
         }
 
