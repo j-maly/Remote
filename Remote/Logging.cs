@@ -65,7 +65,7 @@ namespace Remote
         public IEnumerable<string> GetLogTail(int? numberOfLines)
         {
             IEnumerable<string> logLines = null;
-            if (fileLock.AcquireLockTimeout(5000, 500))
+            if (config.SharedLogFile != null && File.Exists(config.SharedLogFile) && fileLock.AcquireLockTimeout(5000, 500))
             {
                 try
                 {

@@ -97,6 +97,5 @@ namespace Remote.Utils
                 TimeSpan.FromMilliseconds(timeoutMs), TimeSpan.FromMilliseconds(pauseMs));
 
         }
-        
     }
 }
