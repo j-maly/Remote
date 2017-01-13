@@ -5,7 +5,9 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+#if !NO_LOCK
 using FileLock;
+#endif
 
 namespace Remote.Utils
 {
@@ -91,11 +93,13 @@ namespace Remote.Utils
             return false;
         }
 
+        #if !NO_LOCK
         public static bool AcquireLockTimeout(this SimpleFileLock fileLock, int timeoutMs, int pauseMs )
         {
             return RetryUntilSuccessOrTimeout(fileLock.TryAcquireLock,
                 TimeSpan.FromMilliseconds(timeoutMs), TimeSpan.FromMilliseconds(pauseMs));
 
         }
+        #endif
     }
 }

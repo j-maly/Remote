@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Threading;
-using MahApps.Metro.Controls.Dialogs;
 
 namespace Remote
 {
@@ -42,8 +40,7 @@ namespace Remote
 
             if (mainWindow != null && mainWindow.Model != null)
             {
-                mainWindow.ShowMessageAsync("Unhandled Error", recursiveMessage.ToString())
-                    .ContinueWith(task => mainWindow.Model.Refresh());
+                System.Windows.MessageBox.Show("Unhandled Error", recursiveMessage.ToString());
             }
         }
     }
